@@ -1,7 +1,7 @@
-const axios = require('axios');
+import axios from 'axios';
 
 // get all tokens based on the chain name i.e. Solana
-exports.searchDex = async (query) => {
+export const searchDex = async (query: string): Promise<any> => {
 	try {
 		const response = await axios.get(`https://api.dexscreener.com/latest/dex/search/?q=${query}`);
 		return response.data;
