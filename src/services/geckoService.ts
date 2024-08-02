@@ -31,11 +31,12 @@ class CoinGeckoService {
 	// Fetch OHLC chart data from CoinGecko
 	public async ohlcChartData(tokenId: string): Promise<any> {
 		try {
+			console.log(tokenId)
 			const relativeURL = `/coins/${tokenId}/ohlc`;
 			const currency = 'usd';
 			const numberOfDays = 30;
 			const completeURL = `${this.coinGeckoBaseURL}${relativeURL}?vs_currency=${currency}&days=${numberOfDays}`;
-			
+			console.log(completeURL)
 			const response = await axios.get(completeURL, {
 				headers: {
 					accept: 'application/json',
