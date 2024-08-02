@@ -4,6 +4,6 @@ import GeckoController from '../controllers/geckoController';
 
 // coingecko apis
 geckoRouter.get('/coins-list-with-market-data', GeckoController.coinsListWithMarketData);
-geckoRouter.get('/ohlc-chart-data', GeckoController.ohlcChartData);
+geckoRouter.get('/ohlc-chart-data:tokenId', GeckoController.ohlcChartData);
 
 export default geckoRouter;

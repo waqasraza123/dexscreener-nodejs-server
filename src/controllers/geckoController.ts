@@ -15,9 +15,9 @@ export default new class GeckoController {
 
 	// get ohlc chart data from coingecko
 	ohlcChartData = async (req: any, res: any) => {
-		const { q } = req.query;
+		const { tokenId } = req.params;
 		try {
-			const data = await CoinGeckoService.ohlcChartData();
+			const data = await CoinGeckoService.ohlcChartData(tokenId);
 			res.status(200).json(data);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });

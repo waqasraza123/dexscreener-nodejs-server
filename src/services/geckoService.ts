@@ -29,9 +29,8 @@ class CoinGeckoService {
 	}
 	
 	// Fetch OHLC chart data from CoinGecko
-	public async ohlcChartData(): Promise<any> {
+	public async ohlcChartData(tokenId: string): Promise<any> {
 		try {
-			const tokenId = 'solana';
 			const relativeURL = `/coins/${tokenId}/ohlc`;
 			const currency = 'usd';
 			const numberOfDays = 30;
