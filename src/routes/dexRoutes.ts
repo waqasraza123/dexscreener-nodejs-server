@@ -4,6 +4,7 @@ import DexController from '../controllers/dexController';
 
 const dexController = new DexController();
 
+// routes prefix is /api/dex
 // dexscreener api
 dexRouter.get('/search', dexController.searchDex);
 
