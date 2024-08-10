@@ -3,3 +3,7 @@ package-lock.json
 .env
 .idea/
 .DS_Store
+dexscreener-parser/node_modules/
+dexscreener-parser/data.json
+dexscreener-parser/table.html
+dexscreener-parser/.idea
