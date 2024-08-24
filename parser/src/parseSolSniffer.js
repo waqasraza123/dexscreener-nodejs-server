@@ -1,6 +1,7 @@
 const antibotbrowser = require("antibotbrowser");
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const supabase = require('./config/supabaseClient');
 
 // Custom function to handle timeout
 function sleep(ms) {
@@ -9,6 +10,7 @@ function sleep(ms) {
 
 // Function to extract token data and save it as JSON
 async function extractTokenData(tokenContractAddress) {
+    console.log(tokenContractAddress)
     let success = false;
 
     while (!success) {
@@ -27,6 +29,8 @@ async function extractTokenData(tokenContractAddress) {
             await page.setViewport({ width: 1280, height: 800 });
             await page.goto(`https://solsniffer.com/scanner/${tokenContractAddress}`, { waitUntil: 'networkidle2' });
             console.log('Navigated to the token URL.');
+
+            await sleep(15000)// sleep 15 sec
 
             const extractedData = await page.evaluate(() => {
                 const data = [];
@@ -65,12 +69,12 @@ async function extractTokenData(tokenContractAddress) {
                 return data;
             });
 
-            // Save the extracted data as JSON
-            fs.writeFileSync('token_data.json', JSON.stringify(extractedData, null, 2));
-            console.log('Token data saved as JSON.');
+            // Save the extracted data as JSON (you can adjust this to save to Supabase instead)
+            fs.writeFileSync(`token_data_${tokenContractAddress}.json`, JSON.stringify(extractedData, null, 2));
+            console.log(`Token data for ${tokenContractAddress} saved as JSON.`);
 
             success = true;
-            await browser.close();
+            //await browser.close();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -82,5 +86,25 @@ async function extractTokenData(tokenContractAddress) {
     }
 }
 
-const tokenContractAddress = '99myne1mVnsSv2kAkzZDfNnwf5Xb4SASJnaCRXdbpump';
-extractTokenData(tokenContractAddress);
+// Function to fetch tokens from Supabase and extract data for each
+async function processTokens() {
+    // Fetch tokens from Supabase
+    const { data: tokens, error } = await supabase
+        .from('tokens')
+        .select('contract_address');
+
+    if (error) {
+        console.error('Error fetching tokens from Supabase:', error);
+        return;
+    }
+
+    for (const token of tokens) {
+        const contractAddress = token.contract_address;
+        console.log(`Processing contract address: ${contractAddress}`);
+        await extractTokenData(contractAddress);
+        break; // Stop after the first iteration
+    }
+}
+
+// Start processing
+processTokens();
