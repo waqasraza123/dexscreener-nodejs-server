@@ -1,0 +1,22 @@
+{
+  "name": "dexscreener-parser",
+  "version": "1.0.0",
+  "main": "src/parseDexScreener.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.2",
+    "antibotbrowser": "^1.0.5",
+    "axios": "^1.7.3",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "puppeteer": "^23.0.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}
