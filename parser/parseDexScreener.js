@@ -38,6 +38,8 @@ function sleep(ms) {
             await page.goto('https://dexscreener.com', { waitUntil: 'networkidle2' });
             console.log('Navigated to https://dexscreener.com');
 
+            await sleep(15000)
+
             // Extract inner HTML from ds-dex-table class
             const htmlContent = await page.evaluate(() => {
                 const table = document.querySelector('.ds-dex-table');

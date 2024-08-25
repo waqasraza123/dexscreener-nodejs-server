@@ -1,5 +1,6 @@
 import express, {Express} from 'express';
 require('dotenv').config();
+import cors from 'cors';
 
 import authRouter from './routes/authRoutes';
 import dexRouter from './routes/dexRoutes';
@@ -7,6 +8,7 @@ import geckoRouter from './routes/geckoRoutes';
 
 const app: Express = express();
 
+app.use(cors());
 app.use(express.json());
 
 // import routes

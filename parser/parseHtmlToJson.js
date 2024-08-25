@@ -68,6 +68,12 @@ async function parseHtmlToSupabase(htmlFilePath) {
     }
   });
 
+  console.log(rows)
+
+  // Write the parsed data to a JSON file
+  fs.writeFileSync('data.json', JSON.stringify(rows, null, 2));
+  console.log('Data successfully written to data.json.');
+
   // Upsert the parsed data into Supabase
   const { data, error } = await supabase
     .from('tokens')
