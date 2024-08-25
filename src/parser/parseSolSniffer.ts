@@ -1,16 +1,23 @@
-const antibotbrowser = require("antibotbrowser");
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const supabase = require('./config/supabaseClient');
+import antibotbrowser from 'antibotbrowser';
+import puppeteer from 'puppeteer';
+import fs from 'fs';
+import supabase from './config/supabaseClient';
 
 // Custom function to handle timeout
-function sleep(ms) {
+function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Define the type for the extracted data
+interface ExtractedData {
+    text?: string;
+    icon_url?: string;
+    sniff_score?: string;
+}
+
 // Function to extract token data and save it as JSON
-async function extractTokenData(tokenContractAddress) {
-    console.log(tokenContractAddress)
+async function extractTokenData(tokenContractAddress: string): Promise<void> {
+    console.log(tokenContractAddress);
     let success = false;
 
     while (!success) {
@@ -30,10 +37,10 @@ async function extractTokenData(tokenContractAddress) {
             await page.goto(`https://solsniffer.com/scanner/${tokenContractAddress}`, { waitUntil: 'networkidle2' });
             console.log('Navigated to the token URL.');
 
-            await sleep(15000)// sleep 15 sec
+            await sleep(15000); // sleep 15 sec
 
-            const extractedData = await page.evaluate(() => {
-                const data = [];
+            const extractedData: ExtractedData[] = await page.evaluate(() => {
+                const data: ExtractedData[] = [];
 
                 // Select the main div with class 'index_div1__mLqmp'
                 const mainDiv = document.querySelector('div.index_div1__mLqmp');
@@ -42,7 +49,7 @@ async function extractTokenData(tokenContractAddress) {
                     const flexRows = mainDiv.querySelectorAll('div.flex-row');
 
                     flexRows.forEach((flexRow) => {
-                        const rowData = {};
+                        const rowData: ExtractedData = {};
 
                         // Extract text data from the flex-row div
                         rowData.text = flexRow.innerText;
@@ -69,7 +76,7 @@ async function extractTokenData(tokenContractAddress) {
                 return data;
             });
 
-            // Save the extracted data as JSON (you can adjust this to save to Supabase instead)
+            // Save the extracted data as JSON
             fs.writeFileSync(`token_data_${tokenContractAddress}.json`, JSON.stringify(extractedData, null, 2));
             console.log(`Token data for ${tokenContractAddress} saved as JSON.`);
 
@@ -87,7 +94,7 @@ async function extractTokenData(tokenContractAddress) {
 }
 
 // Function to fetch tokens from Supabase and extract data for each
-async function processTokens() {
+async function processTokens(): Promise<void> {
     // Fetch tokens from Supabase
     const { data: tokens, error } = await supabase
         .from('tokens')

@@ -1,7 +1,7 @@
-const { createClient } = require('@supabase/supabase-js');
-const cheerio = require('cheerio');
-const fs = require('fs');
-const supabase = require('./config/supabaseClient');
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import cheerio from 'cheerio';
+import fs from 'fs';
+import { supabase } from '../config/supabaseClient';
 
 // Define the keys for each item
 const keys = [
@@ -17,35 +17,56 @@ const keys = [
   '24h',
   'liquidity',
   'mcap'
-];
+] as const;
+
+// Define the type for row data
+interface TokenData {
+  number?: string;
+  chainLogoUrl?: string;
+  dexLogoUrl?: string;
+  tokenSymbol?: string;
+  chainSymbol?: string;
+  tokenImageUrl?: string;
+  tokenName?: string;
+}
+
+interface RowData {
+  [key: string]: string | TokenData | undefined;
+}
+
+// Define the type for Supabase client
+const supabase: SupabaseClient = createClient(
+  process.env.SUPABASE_URL as string,
+  process.env.SUPABASE_KEY as string
+);
 
 // Function to parse the table HTML and store data in Supabase
-async function parseHtmlToSupabase(htmlFilePath) {
+async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
   // Read the HTML file
   const html = fs.readFileSync(htmlFilePath, 'utf-8');
 
   // Load HTML into cheerio
   const $ = cheerio.load(html);
 
-  const rows = [];
+  const rows: RowData[] = [];
 
   // Iterate over each row with class 'ds-dex-table-row'
   $('.ds-dex-table-row').each((index, row) => {
-    const rowData = {};
+    const rowData: RowData = {};
 
     // Extract Contract_Address from href attribute in anchor tag
-    const contractAddress = $(row).attr('href') || '';
+    const contractAddress = $(row).find('a').attr('href') || '';
     rowData['contract_address'] = contractAddress.split('/')[2];
 
     // Iterate over each cell with class 'ds-table-data-cell'
     $(row).find('.ds-table-data-cell').each((cellIndex, cell) => {
       const key = keys[cellIndex];
       if (key) {
-        if (key === 'Token') {
+        if (key === 'token') {
           // Extract detailed information for the Token cell
           const tokenCell = $(cell);
 
-          const tokenData = {
+          const tokenData: TokenData = {
             number: tokenCell.find('.ds-dex-table-row-badge-pair-no').text().trim(),
             chainLogoUrl: tokenCell.find('.ds-dex-table-row-chain-icon').attr('src'),
             dexLogoUrl: tokenCell.find('.ds-dex-table-row-dex-icon').attr('src'),
@@ -68,7 +89,7 @@ async function parseHtmlToSupabase(htmlFilePath) {
     }
   });
 
-  console.log(rows)
+  console.log(rows);
 
   // Write the parsed data to a JSON file
   fs.writeFileSync('data.json', JSON.stringify(rows, null, 2));
@@ -87,4 +108,4 @@ async function parseHtmlToSupabase(htmlFilePath) {
 }
 
 // Export the function for external usage
-module.exports = { parseHtmlToSupabase };
+export { parseHtmlToSupabase };
