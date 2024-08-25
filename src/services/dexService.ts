@@ -17,7 +17,7 @@ export const searchDex = async (query: string): Promise<any> => {
 export const fetchTokens = async (): Promise<any> => {
 	//try {
 		// Resolve the path to the JSON file
-		const filePath = path.resolve(__dirname, '../../parser/data.json');
+		const filePath = path.resolve(__dirname, '../../data.json');
 		
 		// Read the file contents
 		const fileData = fs.readFileSync(filePath, 'utf-8');
