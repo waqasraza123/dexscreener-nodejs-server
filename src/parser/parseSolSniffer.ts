@@ -1,7 +1,7 @@
 import antibotbrowser from 'antibotbrowser';
 import puppeteer from 'puppeteer';
 import fs from 'fs';
-import supabase from './config/supabaseClient';
+import supabase from '../config/supabaseClient';
 
 // Custom function to handle timeout
 function sleep(ms: number): Promise<void> {

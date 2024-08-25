@@ -1,7 +1,7 @@
 import antibotbrowser from 'antibotbrowser';
 import puppeteer from 'puppeteer';
 import fs from 'fs';
-import { parseHtmlToSupabase } from 'parseHtmlToJson';
+import { parseHtmlToSupabase } from './parseHtmlToJson';
 
 async function parseDexScreener() {
     let success = false;
@@ -38,7 +38,7 @@ async function parseDexScreener() {
                 fs.writeFileSync('table.html', htmlContent);
                 console.log('Table HTML content saved to table.html');
                 
-                parseHtmlToSupabase('table.html', 'data.json');
+                parseHtmlToSupabase('table.html');
 
                 success = true;
             } else {

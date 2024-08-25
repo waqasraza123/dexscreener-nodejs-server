@@ -1,7 +1,6 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import fs from 'fs';
-import { supabase } from '../config/supabaseClient';
+import supabase from '../config/supabaseClient';
 
 // Define the keys for each item
 const keys = [
@@ -34,12 +33,6 @@ interface RowData {
   [key: string]: string | TokenData | undefined;
 }
 
-// Define the type for Supabase client
-const supabase: SupabaseClient = createClient(
-  process.env.SUPABASE_URL as string,
-  process.env.SUPABASE_KEY as string
-);
-
 // Function to parse the table HTML and store data in Supabase
 async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
   // Read the HTML file
@@ -55,7 +48,7 @@ async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
     const rowData: RowData = {};
 
     // Extract Contract_Address from href attribute in anchor tag
-    const contractAddress = $(row).find('a').attr('href') || '';
+    const contractAddress = $(row).attr('href') || '';
     rowData['contract_address'] = contractAddress.split('/')[2];
 
     // Iterate over each cell with class 'ds-table-data-cell'
@@ -89,8 +82,6 @@ async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
     }
   });
 
-  console.log(rows);
-
   // Write the parsed data to a JSON file
   fs.writeFileSync('data.json', JSON.stringify(rows, null, 2));
   console.log('Data successfully written to data.json.');
@@ -98,7 +89,7 @@ async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
   // Upsert the parsed data into Supabase
   const { data, error } = await supabase
     .from('tokens')
-    .upsert(rows, { onConflict: ['contract_address'] });
+    .upsert(rows, { onConflict: 'contract_address' });
 
   if (error) {
     console.error('Error upserting data into Supabase:', error);

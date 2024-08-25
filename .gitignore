@@ -4,3 +4,7 @@ package-lock.json
 .idea/
 .DS_Store
 parser/.idea
+data.json
+table.html
+parser/data.json
+parser/table.html
