@@ -1,6 +1,5 @@
 import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import supabase from '../config/supabaseClient';
 
 // get all tokens based on the chain name i.e. Solana
 export const searchDex = async (query: string): Promise<any> => {
@@ -13,20 +12,22 @@ export const searchDex = async (query: string): Promise<any> => {
 };
 
 
-// get all parsed tokens
+// Fetch tokens based on the chainId from Supabase
 export const fetchTokens = async (chainId: string): Promise<any> => {
 	//try {
-		// Resolve the path to the JSON file
-		const filePath = path.resolve(__dirname, '../../data.json');
+		// Query the tokens from Supabase
+		const { data, error } = await supabase
+			.from('tokens')
+			.select('*');
 		
-		// Read the file contents
-		const fileData = fs.readFileSync(filePath, 'utf-8');
+		// if (error) {
+		// 	throw new Error(`Error fetching data from Supabase: ${error.message}`);
+		// }
 		
-		// Parse the JSON data
-		const tokens = JSON.parse(fileData);
-		
-		return tokens;
+		// Return the token data
+        console.log(data)
+		return data;
 	// } catch (error) {
-	// 	throw new Error('Error fetching data from local JSON file');
+	// 	throw new Error('Error fetching data from Supabase');
 	// }
 };
