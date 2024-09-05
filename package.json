@@ -22,7 +22,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase": "^10.12.5",
-    "puppeteer": "^23.1.1"
+    "puppeteer": "^23.1.1",
+    "stripe": "^16.8.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

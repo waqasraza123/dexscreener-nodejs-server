@@ -1,6 +1,6 @@
-import * as cheerio from 'cheerio';
-import fs from 'fs';
-import supabase from '../config/supabaseClient';
+const cheerio = require('cheerio');
+const fs = require('fs');
+const supabase = require('../config/supabaseClient')
 
 // Define the keys for each item
 const keys = [
@@ -16,36 +16,21 @@ const keys = [
   '24h',
   'liquidity',
   'mcap'
-] as const;
-
-// Define the type for row data
-interface TokenData {
-  number?: string;
-  chainLogoUrl?: string;
-  dexLogoUrl?: string;
-  tokenSymbol?: string;
-  chainSymbol?: string;
-  tokenImageUrl?: string;
-  tokenName?: string;
-}
-
-interface RowData {
-  [key: string]: string | TokenData | undefined;
-}
+];
 
 // Function to parse the table HTML and store data in Supabase
-async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
+async function parseHtmlToSupabase(htmlFilePath) {
   // Read the HTML file
   const html = fs.readFileSync(htmlFilePath, 'utf-8');
 
   // Load HTML into cheerio
   const $ = cheerio.load(html);
 
-  const rows: RowData[] = [];
+  const rows = [];
 
   // Iterate over each row with class 'ds-dex-table-row'
   $('.ds-dex-table-row').each((index, row) => {
-    const rowData: RowData = {};
+    const rowData = {};
 
     // Extract Contract_Address from href attribute in anchor tag
     const contractAddress = $(row).attr('href') || '';
@@ -59,7 +44,7 @@ async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
           // Extract detailed information for the Token cell
           const tokenCell = $(cell);
 
-          const tokenData: TokenData = {
+          const tokenData = {
             number: tokenCell.find('.ds-dex-table-row-badge-pair-no').text().trim(),
             chainLogoUrl: tokenCell.find('.ds-dex-table-row-chain-icon').attr('src'),
             dexLogoUrl: tokenCell.find('.ds-dex-table-row-dex-icon').attr('src'),
@@ -77,26 +62,26 @@ async function parseHtmlToSupabase(htmlFilePath: string): Promise<void> {
       }
     });
 
-    if (Object.keys(rowData).length > 0) {
-      rows.push(rowData);
+        if (Object.keys(rowData).length > 0) {
+        rows.push(rowData);
+        }
+    });
+
+    // Write the parsed data to a JSON file
+    fs.writeFileSync('data.json', JSON.stringify(rows, null, 2));
+    console.log('Data successfully written to data.json.');
+
+    //Upsert the parsed data into Supabase
+    const { data, error } = await supabase
+        .from('tokens')
+        .upsert(rows, { onConflict: 'contract_address' });
+
+    if (error) {
+        console.error('Error upserting data into Supabase:', error);
+    } else {
+        console.log('Data successfully upserted into Supabase:', data);
     }
-  });
-
-  // Write the parsed data to a JSON file
-  fs.writeFileSync('data.json', JSON.stringify(rows, null, 2));
-  console.log('Data successfully written to data.json.');
-
-  // Upsert the parsed data into Supabase
-  const { data, error } = await supabase
-    .from('tokens')
-    .upsert(rows, { onConflict: 'contract_address' });
-
-  if (error) {
-    console.error('Error upserting data into Supabase:', error);
-  } else {
-    console.log('Data successfully upserted into Supabase:', data);
-  }
 }
 
 // Export the function for external usage
-export { parseHtmlToSupabase };
+module.exports = { parseHtmlToSupabase };

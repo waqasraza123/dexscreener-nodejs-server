@@ -15,8 +15,9 @@ export default new class DexController {
 	
 	//get parsed tokens from dexscreener
 	tokens = async (req: any, res: any): Promise<void> => {
+        const { chainId } = req.query.chainId;
 		try {
-			const data = await fetchTokens();
+			const data = await fetchTokens(chainId);
 			res.status(200).json(data);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });

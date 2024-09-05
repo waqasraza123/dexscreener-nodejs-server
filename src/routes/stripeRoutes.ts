@@ -7,6 +7,7 @@ const stripeRouter: Router = express.Router();
 stripeRouter.post('/subscriptions', StripeController.createSubscription.bind(StripeController));
 stripeRouter.put('/subscriptions/:id', StripeController.updateSubscription.bind(StripeController));
 stripeRouter.delete('/subscriptions/:id', StripeController.cancelSubscription.bind(StripeController));
+stripeRouter.get('/subscriptions/prices', StripeController.getPricesForProduct.bind(StripeController));
 
 // Payment Intents
 stripeRouter.post('/payment-intents', StripeController.createPaymentIntent.bind(StripeController));
@@ -23,5 +24,7 @@ stripeRouter.post('/webhook', StripeController.handleWebhook.bind(StripeControll
 
 // Handle Failed Payments
 stripeRouter.post('/failed-payments', StripeController.handleFailedPayments.bind(StripeController));
+
+
 
 export default stripeRouter;

@@ -1,22 +1,15 @@
-import antibotbrowser from 'antibotbrowser';
-import puppeteer from 'puppeteer';
-import fs from 'fs';
-import supabase from '../config/supabaseClient';
+const antibotbrowser = require('antibotbrowser');
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const supabase = require('../config/supabaseClient')
 
 // Custom function to handle timeout
-function sleep(ms: number): Promise<void> {
+function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Define the type for the extracted data
-interface ExtractedData {
-    text?: string;
-    icon_url?: string;
-    sniff_score?: string;
-}
-
 // Function to extract token data and save it as JSON
-async function extractTokenData(tokenContractAddress: string): Promise<void> {
+async function extractTokenData(tokenContractAddress) {
     console.log(tokenContractAddress);
     let success = false;
 
@@ -39,8 +32,8 @@ async function extractTokenData(tokenContractAddress: string): Promise<void> {
 
             await sleep(15000); // sleep 15 sec
 
-            const extractedData: ExtractedData[] = await page.evaluate(() => {
-                const data: ExtractedData[] = [];
+            const extractedData = await page.evaluate(() => {
+                const data = [];
 
                 // Select the main div with class 'index_div1__mLqmp'
                 const mainDiv = document.querySelector('div.index_div1__mLqmp');
@@ -49,7 +42,7 @@ async function extractTokenData(tokenContractAddress: string): Promise<void> {
                     const flexRows = mainDiv.querySelectorAll('div.flex-row');
 
                     flexRows.forEach((flexRow) => {
-                        const rowData: ExtractedData = {};
+                        const rowData = {};
 
                         // Extract text data from the flex-row div
                         rowData.text = flexRow.innerText;
@@ -94,23 +87,23 @@ async function extractTokenData(tokenContractAddress: string): Promise<void> {
 }
 
 // Function to fetch tokens from Supabase and extract data for each
-async function processTokens(): Promise<void> {
+async function processTokens() {
     // Fetch tokens from Supabase
-    const { data: tokens, error } = await supabase
-        .from('tokens')
-        .select('contract_address');
+    // const { data: tokens, error } = await supabase
+    //     .from('tokens')
+    //     .select('contract_address');
 
-    if (error) {
-        console.error('Error fetching tokens from Supabase:', error);
-        return;
-    }
+    // if (error) {
+    //     console.error('Error fetching tokens from Supabase:', error);
+    //     return;
+    // }
 
-    for (const token of tokens) {
-        const contractAddress = token.contract_address;
-        console.log(`Processing contract address: ${contractAddress}`);
-        await extractTokenData(contractAddress);
-        break; // Stop after the first iteration
-    }
+    // for (const token of tokens) {
+    //     const contractAddress = token.contract_address;
+    //     console.log(`Processing contract address: ${contractAddress}`);
+    //     await extractTokenData(contractAddress);
+    //     break; // Stop after the first iteration
+    // }
 }
 
 // Start processing

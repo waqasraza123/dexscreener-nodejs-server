@@ -3,6 +3,7 @@ import { SubscriptionService } from '../services/stripe/subscriptionService';
 import { PaymentIntentService } from '../services/stripe/paymentIntentService';
 import { InvoiceService } from '../services/stripe/invoiceService';
 import { ConnectService } from '../services/stripe/connectService';
+import StripeService from '../services/stripe/stripeService'
 
 class StripeController {
   private subscriptionService: SubscriptionService;
@@ -109,6 +110,17 @@ class StripeController {
       const data = req.body;
       // Logic to handle failed payments
       res.status(200).json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  // Fetch Prices for a Product
+  public async getPricesForProduct(req: Request, res: Response): Promise<void> {
+    try {
+      const { productId } = req.params;
+      const prices = await StripeService.getPricesForProduct(productId);
+      res.status(200).json(prices);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

@@ -14,7 +14,7 @@ export const searchDex = async (query: string): Promise<any> => {
 
 
 // get all parsed tokens
-export const fetchTokens = async (): Promise<any> => {
+export const fetchTokens = async (chainId: string): Promise<any> => {
 	//try {
 		// Resolve the path to the JSON file
 		const filePath = path.resolve(__dirname, '../../data.json');

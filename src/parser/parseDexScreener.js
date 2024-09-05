@@ -1,7 +1,7 @@
-import antibotbrowser from 'antibotbrowser';
-import puppeteer from 'puppeteer';
-import fs from 'fs';
-import { parseHtmlToSupabase } from './parseHtmlToJson';
+const antibotbrowser = require('antibotbrowser');
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const { parseHtmlToSupabase } = require('./parseHtmlToJson');
 
 async function parseDexScreener() {
     let success = false;
@@ -57,8 +57,10 @@ async function parseDexScreener() {
     }
 }
 
-function sleep(ms: number) {
+function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export default parseDexScreener;
+module.exports = parseDexScreener;
+
+parseDexScreener();
