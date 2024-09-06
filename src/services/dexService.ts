@@ -14,20 +14,19 @@ export const searchDex = async (query: string): Promise<any> => {
 
 // Fetch tokens based on the chainId from Supabase
 export const fetchTokens = async (chainId: string): Promise<any> => {
-	//try {
+	try {
 		// Query the tokens from Supabase
 		const { data, error } = await supabase
 			.from('tokens')
 			.select('*');
 		
-		// if (error) {
-		// 	throw new Error(`Error fetching data from Supabase: ${error.message}`);
-		// }
+		if (error) {
+			throw new Error(`Error fetching data from Supabase: ${error.message}`);
+		}
 		
 		// Return the token data
-        console.log(data)
 		return data;
-	// } catch (error) {
-	// 	throw new Error('Error fetching data from Supabase');
-	// }
+	} catch (error) {
+		throw new Error('Error fetching data from Supabase');
+	}
 };

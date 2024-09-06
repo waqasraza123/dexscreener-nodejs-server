@@ -11,6 +11,7 @@ export class SubscriptionService {
 
   // Create a new subscription
   public async createSubscription(data: any) {
+    this.stripe.subscriptions.list
     console.log(data)
     try {
       const customer = await this.stripe.customers.create({
