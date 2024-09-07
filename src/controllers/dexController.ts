@@ -18,6 +18,7 @@ export default new class DexController {
         const { chainId } = req.query;
 		try {
 			const data = await fetchTokens(chainId);
+            console.log(data[0].token);
 			res.status(200).json(data);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });
