@@ -3,7 +3,7 @@ import { fetchTokenInfo } from '../controllers/blockchain/solanaBlockchainContro
 
 const router = Router();
 
-// all routes are prefixed with /api/solana-blockchain
+// all routes are prefixed with /api/blockchain/solana
 
 // Route to get token information by mint address
 router.get('/token/:mintAddress', fetchTokenInfo);

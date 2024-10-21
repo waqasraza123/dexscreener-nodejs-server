@@ -22,6 +22,6 @@ app.use('/api/gecko', geckoRouter);
 app.use('/api/stripe', stripeRouter);
 app.use('/api/openai', predictionRouter);
 app.use('/api/chat', chatRouter);
-app.use('/api/solana-blockchain', solanaRouter);
+app.use('/api/blockchain/solana', solanaRouter);
 
 export default app;
