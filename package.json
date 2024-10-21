@@ -14,16 +14,22 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@solana/spl-token": "^0.4.9",
+    "@solana/web3.js": "^1.95.4",
     "@supabase/supabase-js": "^2.45.2",
     "antibotbrowser": "^1.0.5",
     "axios": "^1.7.2",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase": "^10.12.5",
     "openai": "^4.63.0",
     "puppeteer": "^23.1.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "socket.io": "^4.8.0",
     "stripe": "^16.8.0"
   },
   "devDependencies": {
