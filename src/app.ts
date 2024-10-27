@@ -9,6 +9,8 @@ import stripeRouter from './routes/stripeRoutes';
 import predictionRouter from './routes/openai/predictionRoutes';
 import chatRouter from './routes/chatRoutes';
 import solanaRouter from './routes/solanaRoutes';
+import moralisRouter from './routes/moralisRoutes';
+import magicRouter from './routes/magicRoutes';
 
 const app: Express = express();
 
@@ -22,6 +24,10 @@ app.use('/api/gecko', geckoRouter);
 app.use('/api/stripe', stripeRouter);
 app.use('/api/openai', predictionRouter);
 app.use('/api/chat', chatRouter);
+//routes with blockchain
 app.use('/api/blockchain/solana', solanaRouter);
+//direct web3 related routes
+app.use('/api/web3/moralis', moralisRouter);
+app.use('/api/web3/magic', magicRouter);
 
 export default app;
