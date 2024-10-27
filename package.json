@@ -26,6 +26,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase": "^10.12.5",
+    "moralis": "^2.27.2",
     "openai": "^4.63.0",
     "puppeteer": "^23.1.1",
     "puppeteer-extra": "^3.3.6",

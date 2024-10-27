@@ -23,3 +23,12 @@ export const createStream = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const fetchMultipleNFTs = async (req: Request, res: Response) => {
+    //try {
+      const nftData = await MoralisService.getMultipleNFTs();
+      res.status(200).json(nftData);
+    // } catch (error: any) {
+    //   res.status(500).json({ message: 'Error fetching NFTs', error: error.message });
+    // }
+};
